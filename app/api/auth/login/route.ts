@@ -1,13 +1,13 @@
-import bcrypt from "bcryptjs";
+﻿import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 import { AUTH_COOKIE_NAME } from "@/lib/constants";
-import { env } from "@/lib/env";
 import { writeAuditLog } from "@/lib/audit";
 import { loginSchema } from "@/lib/validation";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -101,7 +101,7 @@ export async function POST(request: Request) {
     response.cookies.set(AUTH_COOKIE_NAME, token, {
       httpOnly: true,
       sameSite: "lax",
-      secure: env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV === "production",
       path: "/",
       maxAge: 60 * 60 * 8,
     });
@@ -121,5 +121,4 @@ export async function POST(request: Request) {
     );
   }
 }
-
 

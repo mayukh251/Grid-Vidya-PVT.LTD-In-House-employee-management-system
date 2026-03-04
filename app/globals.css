@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+:root {
+  --bg-main: #0d1016;
+  --bg-sidebar: #111620;
+  --card-surface: #191f2b;
+  --card-soft: #1f2735;
+  --text-primary: #f2f4f8;
+  --text-muted: #a8b0c2;
+  --line-soft: rgba(255, 255, 255, 0.08);
+  --glow-coral: rgba(247, 100, 84, 0.35);
+  --glow-violet: rgba(121, 112, 255, 0.35);
+  --glow-blue: rgba(98, 196, 255, 0.35);
+}
+
+@theme inline {
+  --font-sans: var(--font-space);
+  --font-display: var(--font-raj);
+}
+
+* {
+  border-color: var(--line-soft);
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  color: var(--text-primary);
+  font-family: var(--font-space), "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 10% -10%, rgba(86, 98, 255, 0.18), transparent 38%),
+    radial-gradient(circle at 80% 0%, rgba(255, 109, 88, 0.14), transparent 35%),
+    radial-gradient(circle at 100% 100%, rgba(91, 198, 255, 0.12), transparent 45%),
+    var(--bg-main);
+}
+
+@layer components {
+  .card-shell {
+    @apply rounded-2xl border border-white/10 bg-[var(--card-surface)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.03),0_20px_60px_rgba(0,0,0,0.35)] transition-all duration-300;
+  }
+
+  .card-shell:hover {
+    @apply -translate-y-0.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_72px_rgba(0,0,0,0.42)];
+  }
+
+  .metric-title {
+    @apply font-[var(--font-display)] text-3xl leading-none tracking-tight;
+  }
+
+  .chip {
+    @apply rounded-full border border-white/20 px-3 py-1 text-xs text-white/80;
+  }
+}
+
+

@@ -1,9 +1,10 @@
-import { NextResponse, type NextRequest } from "next/server";
+﻿import { NextResponse, type NextRequest } from "next/server";
 import { AUTH_COOKIE_NAME } from "@/lib/constants";
 import { extractTokenFromRequest, verifySessionToken } from "@/lib/auth";
 import { writeAuditLog } from "@/lib/audit";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   const token = extractTokenFromRequest(request);
@@ -28,5 +29,3 @@ export async function POST(request: NextRequest) {
 
   return response;
 }
-
-

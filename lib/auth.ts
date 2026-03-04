@@ -1,9 +1,8 @@
-import { cookies } from "next/headers";
+﻿import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import jwt, { type Secret, type SignOptions } from "jsonwebtoken";
 import { z } from "zod";
 import { AUTH_COOKIE_NAME } from "@/lib/constants";
-import { env } from "@/lib/env";
 
 const tokenSchema = z.object({
   userId: z.string().cuid(),
@@ -14,15 +13,37 @@ const tokenSchema = z.object({
 
 export type SessionToken = z.infer<typeof tokenSchema>;
 
+function getJwtSecret(): Secret | null {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    return null;
+  }
+  return secret as Secret;
+}
+
+function getJwtExpiresIn(): SignOptions["expiresIn"] {
+  return (process.env.JWT_EXPIRES_IN ?? "8h") as SignOptions["expiresIn"];
+}
+
 export function signSessionToken(payload: SessionToken): string {
-  return jwt.sign(payload, env.JWT_SECRET as Secret, {
-    expiresIn: env.JWT_EXPIRES_IN,
+  const secret = getJwtSecret();
+  if (!secret) {
+    throw new Error("JWT_SECRET is not configured");
+  }
+
+  return jwt.sign(payload, secret, {
+    expiresIn: getJwtExpiresIn(),
   } as SignOptions);
 }
 
 export function verifySessionToken(token: string): SessionToken | null {
   try {
-    const decoded = jwt.verify(token, env.JWT_SECRET as Secret);
+    const secret = getJwtSecret();
+    if (!secret) {
+      return null;
+    }
+
+    const decoded = jwt.verify(token, secret);
     return tokenSchema.parse(decoded);
   } catch {
     return null;
@@ -54,5 +75,4 @@ export async function getSessionFromCookies(): Promise<SessionToken | null> {
 
   return verifySessionToken(token);
 }
-
 
